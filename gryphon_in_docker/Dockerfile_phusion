@@ -1,0 +1,34 @@
+# Use baseimage-docker which is a modified Ubuntu specifically for Docker
+# https://hub.docker.com/r/phusion/baseimage
+# https://github.com/phusion/baseimage-docker
+FROM phusion/baseimage:0.11
+
+# Use baseimage-docker's init system
+CMD ["/sbin/my_init"]
+
+
+# Update and install packages
+RUN apt update && apt -y upgrade && apt -y install \
+    wget \
+    sudo
+
+RUN apt -y install \
+    build-essential \
+    python3-dev 
+
+RUN apt --purge autoremove python3-pip
+
+RUN apt install -y python3-pip
+
+WORKDIR /opt
+
+#RUN cd /opt/ && wget https://gitlab.nps.edu/monterey-phoenix/user-interfaces/gryphon/-/blob/master/install_mp.bash
+
+RUN wget https://gitlab.nps.edu/monterey-phoenix/user-interfaces/gryphon/-/raw/master/install_mp.bash
+
+RUN chmod u+x /opt/install_mp.bash 
+
+RUN yes | bash /opt/install_mp.bash ubuntu
+
+
+
