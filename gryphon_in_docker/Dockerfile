@@ -21,15 +21,40 @@ RUN apt --purge autoremove python3-pip
 
 RUN apt install -y python3-pip
 
-WORKDIR /opt
+# adding non-root user
+# based on https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+ARG USERNAME=auser
+ARG USER_ID=1000
+ARG USER_GID=$USER_ID
+
+RUN groupadd --gid $USER_GID $USERNAME && \
+    useradd  --uid $USER_ID --gid $USER_GID $USERNAME && \
+    echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
+    chmod 0440 /etc/sudoers.d/$USERNAME
+
+ARG INSTALL_PATH=/opt/gryphon
+
+RUN mkdir $INSTALL_PATH
+RUN chgrp $USER_GID $INSTALL_PATH
+RUN chown $USER_ID  $INSTALL_PATH
+
+ARG INSTALL_PATH=$INSTALL_PATH
+
+USER $USERNAME
+
+WORKDIR $INSTALL_PATH
 
 #RUN cd /opt/ && wget https://gitlab.nps.edu/monterey-phoenix/user-interfaces/gryphon/-/blob/master/install_mp.bash
 
 RUN wget https://gitlab.nps.edu/monterey-phoenix/user-interfaces/gryphon/-/raw/master/install_mp.bash
 
-RUN chmod u+x /opt/install_mp.bash 
+RUN chmod u+x $INSTALL_PATH/install_mp.bash 
 
-RUN yes | bash /opt/install_mp.bash ubuntu
+USER root
+
+RUN yes | bash $INSTALL_PATH/install_mp.bash ubuntu
+
+# these installions are an attempt to debug the Qt issues
 
 RUN apt -y install \
     libgl1-mesa-glx
@@ -51,6 +76,9 @@ RUN apt-get install -y libqt5gui5 && \
     rm -rf /var/lib/apt/lists/*
 ENV QT_DEBUG_PLUGINS=1
 
-WORKDIR /root/mp_gryphon/gryphon/python
+USER $USERNAME
 
+#WORKDIR /root/mp_gryphon/gryphon/python
+
+#RUN chmod 777 -R *
 
