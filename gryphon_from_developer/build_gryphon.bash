@@ -1,6 +1,6 @@
 #!/bin/bash
 # abort on error
-set -e
+set -eux
 
 BASEDIR=$PWD
 

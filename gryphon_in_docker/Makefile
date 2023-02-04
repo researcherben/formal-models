@@ -3,6 +3,10 @@ docker: docker_build docker_run
 docker_build:
 	docker build -t mp_gryphon .
 
+docker_build_v0:
+	docker build -f Dockerfile_v0 -t mp_gryphon .
+
+
 docker_run:
 	docker run -it --rm \
 		--env "DISPLAY=host.docker.internal:0" \
