@@ -2,22 +2,25 @@ from ubuntu
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
-RUN apt-get install -y build-essential libc6-dev-i386 csh
-RUN apt-get install -y python3-pip
+RUN apt-get install -y \
+     build-essential \
+     libc6-dev-i386 \
+     csh \
+     python3-pip \
+     python3-pyqt5
 
 # Qt requires non-root
 RUN adduser --quiet --disabled-password mp_user && usermod -a -G audio mp_user
 USER mp_user:audio
 RUN pip3 install --upgrade pip
-RUN pip3 install opencv-python-headless
-RUN pip3 install PySide6
-RUN pip3 install pyqtdarktheme
+RUN pip3 install \
+     opencv-python-headless \
+     PySide6 \
+     pyqtdarktheme
 
 WORKDIR /opt
 
-COPY minimum_qt_demo.py /opt 
+COPY minimum_qt_demo.py /opt
 
 # Qt environment
 ENV QT_DEBUG_PLUGINS=1
-
-
