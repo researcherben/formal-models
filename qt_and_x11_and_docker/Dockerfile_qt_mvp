@@ -1,3 +1,6 @@
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+
+# https://hub.docker.com/_/ubuntu/tags
 FROM ubuntu@sha256:9a0bdde4188b896a372804be2384015e90e3f84906b750c1a53539b585fbbe7f
 
 ARG DEBIAN_FRONTEND=noninteractive
