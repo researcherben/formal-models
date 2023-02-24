@@ -26,7 +26,7 @@ docker_run_gryphon_mac:
 		$(IMAGE_NAME)
 
 docker_run_gryphon_linux:
-	docker run -it \
+	docker run -it --rm \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		--env DISPLAY=$$DISPLAY \
 		--user mp_user \
